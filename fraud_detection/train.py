@@ -54,11 +54,11 @@ if __name__=='__main__':
     review_capacity=400
     test_data_perc=0.3
 
-    # print(f'{datetime.now()} Model training started...')
-    # model=trainModel(data_dir,class_label)
-    # print(f'{datetime.now()} Model training completed!')
+    print(f'{datetime.now()} Model training started...')
+    model=trainModel(data_dir,class_label)
+    print(f'{datetime.now()} Model training completed!')
 
-    model=joblib.load('fraud_detection/model/random_forest_trained.joblib')
+    #model=joblib.load('fraud_detection/model/random_forest_trained.joblib')
     print(f'{datetime.now()} Testing model...')
 
     testModel(model,data_dir,class_label,review_capacity,test_data_perc)
