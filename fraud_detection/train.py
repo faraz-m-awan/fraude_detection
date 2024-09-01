@@ -58,7 +58,7 @@ if __name__=='__main__':
     model=trainModel(data_dir,class_label)
     print(f'{datetime.now()} Model training completed!')
 
-    #model=joblib.load('fraud_detection/model/random_forest_trained.joblib')
+    #model=joblib.load('fraud_detection/model/random_forest_trained.joblib') # This loads the model if you already have model trained. In this case, no need to run the trainModel code above
     print(f'{datetime.now()} Testing model...')
 
     testModel(model,data_dir,class_label,review_capacity,test_data_perc)
