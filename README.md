@@ -88,16 +88,37 @@ If the user is satisfied with the model's performance, the trained model will be
 
 ### Model Performance
 
-After training and testing, the model's performance on the test data is summarized as follows:
+#### Percentage of Fraud Prevention
 
-|           | precision | recall | f1-score | support |
-|-----------|-----------|--------|----------|---------|
-| **Class 0** (Non-Fraudulent) | 1.00      | 1.00   | 1.00     | 35324   |
-| **Class 1** (Fraudulent)     | 0.61      | 0.67   | 0.64     | 263     |
-| **Accuracy**                 |           |        | 0.99     | 35587   |
-| **Macro Avg**                | 0.81      | 0.83   | 0.82     | 35587   |
-| **Weighted Avg**             | 0.99      | 0.99   | 0.99     | 35587   |
+In addition to traditional classification metrics like precision, recall, and F1-score, another critical metric was calculated: **Percentage of Fraud Prevention**. This metric is particularly significant given the business problem, which involves maximizing the detection of fraudulent transactions within the review capacity of fraud analysts.
 
+**Review Capacity Calculation:**
+- The total analyst review capacity was given as 400 transactions per month, which equates to **4,800 transactions per year** (400 transactions/month * 12 months).
+- Since the test data represents 30% of the total transactions from one year, the corresponding review capacity for the test set is **1,440 transactions** (4,800 transactions/year * 0.30).
 
-- Class 0: Represents non-fraudulent transactions with a precision, recall, and F1-score of 1.00.
-- Class 1: Represents fraudulent transactions with a precision of 0.61, recall of 0.67, and F1-score of 0.64.
+**Calculation Methodology:**
+- **Step 1:** For each transaction in the test data, the model generated a probability indicating the likelihood of the transaction being fraudulent.
+- **Step 2:** These transactions were then sorted in descending order based on their fraud probability.
+- **Step 3:** The top `n` transactions, where `n` equals the analyst review capacity (1,440 transactions in this case), were selected for further analysis.
+- **Step 4:** The percentage of total fraudulent transactions detected within this top `n` was calculated.
+
+**Result:** The model was able to identify and prioritize fraudulent transactions effectively, achieving a **95% Fraud Prevention Rate**. This means that 95% of the total fraud in the test set would have been prevented by reviewing the top `n` transactions ranked by the model, significantly reducing potential fraud losses.
+
+This metric demonstrates the model's effectiveness in identifying high-risk transactions, ensuring that the limited review capacity of analysts is used most efficiently to prevent the maximum amount of fraud.
+
+#### Classification Report
+
+Following is the detailed performance of the model on the test data, as calculated using the built-in `classification_report` method from scikit-learn:
+
+          precision    recall  f1-score   support
+
+       0       1.00      1.00      1.00     35324
+       1       0.61      0.67      0.64       263
+
+accuracy                           0.99     35587
+
+**Difference from Percentage of Fraud Prevention:**
+- **Scope:** The `classification_report` metrics (precision, recall, F1-score) evaluate the model's performance across the entire test dataset, providing an overall view of the model's ability to classify transactions as fraudulent or non-fraudulent.
+- **Application:** The **Percentage of Fraud Prevention** metric specifically evaluates the effectiveness of the model in a practical scenario where only a limited number of transactions can be reviewed. It focuses on maximizing the detection of fraud within the top-ranked transactions that the analysts will actually review, rather than assessing the model's performance across the entire test set.
+
+In summary, while the classification report metrics provide a general measure of model performance, the **Percentage of Fraud Prevention** metric directly assesses the real-world impact of the model in preventing fraud under practical constraints.
